@@ -1,69 +1,41 @@
-import { useState } from "react";
 import { StyleSheet, SafeAreaView, Text, View, FlatList } from "react-native";
 import { Task } from "../components/shared/Task";
 import { AddTask } from "../components/shared/Add";
-import { v4 as uuid } from "uuid";
+import { useDispatch, useSelector } from "react-redux";
+import { addTaskReducer } from "../redux/reducers/TaskList";
+import { getTasks } from "../redux/selectors/selector";
 export const Home = () => {
-  const [tasks, setTasks] = useState([]);
+  const tasks = useSelector(getTasks);
+
+  const dispatch = useDispatch();
   //Add task
   const addTask = (title) => {
-    const newTask = {
-      id: uuid,
-      title,
-      completed: false,
-    };
-    if (title === "") {
-      alert("Please enter a task");
-    } else {
-      setTasks([...tasks, newTask]);
-    }
+    if (title === "") return;
+    dispatch(addTaskReducer(title));
   };
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  const taskCompleted = (id) => {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === id) {
-          task.completed = !task.completed;
-        }
-        return task;
-      })
-    );
-  };
+  const taskCount = tasks.length;
+  const CompletedCount = tasks.filter((task) => task.completed === true);
 
   return (
     <SafeAreaView>
       <AddTask addTask={addTask} />
       <View style={styles.countTask}>
         <Text style={{ fontSize: 20, fontWeight: "bold", margin: 20 }}>
-          {tasks.length > 0 &&
-          tasks.filter((task) => task.completed === false).length > 0
-            ? ` Task (${
-                tasks.filter((task) => task.completed === false).length
-              })`
-            : "No Task"}
+          {taskCount > 0 && CompletedCount.length > 0
+            ? taskCount - CompletedCount.length
+            : taskCount}
+          {taskCount > 1 ? " Tasks" : " Task"}
         </Text>
         <Text style={{ fontSize: 20, fontWeight: "bold", margin: 20 }}>
-          {tasks.length > 0 &&
-          tasks.filter((task) => task.completed === true).length > 0
-            ? ` Completed (${
-                tasks.filter((task) => task.completed === true).length
-              })`
-            : "No Completed Task"}
+          {CompletedCount.length > 0 ? CompletedCount.length : 0} Completed
         </Text>
       </View>
       <FlatList
         data={tasks}
         renderItem={({ item }) => (
           <View>
-            <Task
-              task={item}
-              deleteTask={deleteTask}
-              taskCompleted={taskCompleted}
-            />
+            <Task task={item} />
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}

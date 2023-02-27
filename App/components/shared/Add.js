@@ -1,4 +1,4 @@
-import { color } from "@rneui/base";
+
 import { useState } from "react";
 import { StyleSheet, View, TextInput, Button } from "react-native";
 

@@ -1,22 +1,25 @@
-import { useState } from "react";
+import { 
+  completeTaskReducer, 
+  deleteTaskReducer 
+} from "../../redux/reducers/TaskList"; 
+import { useDispatch } from "react-redux";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 
-export const Task = ({ task, deleteTask , taskCompleted }) => {
-
+export const Task = ({ task }) => {
+  const dispatch = useDispatch();
+  const _completedTask = (id) => {
+    dispatch(completeTaskReducer(id));
+  };
 
   const _deleteTask = (id) => {
-    deleteTask(id);
+    dispatch(deleteTaskReducer(id));
   };
-
-  const _taskCompleted = (id) => {
-    taskCompleted(id);
-  };
-
+  
   return (
     <View style={styles.container}>
       <Pressable
         onPress={() => {
-          _taskCompleted(task.id);
+          _completedTask(task.id);
         }}
       >
         <Image
