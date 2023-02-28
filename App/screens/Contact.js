@@ -11,7 +11,7 @@ export const Contact = () => {
       <View style={styles.info}>
         <Text style={styles.text}>
           <Text style={{ fontWeight: "bold" }}>Phone: </Text>
-          +336 849 675 47
+          +336 000 000 47
         </Text>
         <Text style={styles.text}>
           <Text style={{ fontWeight: "bold" }}>Email: </Text>
